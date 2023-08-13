@@ -1,53 +1,25 @@
 radio.onReceivedValue(function (name, value) {
+    // X Y is the rocker value 
     if (name == "x") {
-        xValue = value
+        direction = value
     }
     if (name == "y") {
-        yValue = value
-    }
-    if (name == "radlice") {
-        pohyb_radlice = value
-        if (pohyb_radlice == 1) {
-            basic.showLeds(`
-                . . # . .
-                . # # # .
-                . . # . .
-                . . # . .
-                . . . . .
-                `)
-        }
-        if (pohyb_radlice == -1) {
-            basic.showLeds(`
-                . . . . .
-                . . # . .
-                . . # . .
-                . # # # .
-                . . # . .
-                `)
-        }
+        speed = value
     }
 })
-let pravy = 0
-let levy = 0
-let yValue = 0
-let xValue = 0
-let pohyb_radlice = 0
+let speed = 0
+let direction = 0
 radio.setGroup(1)
-let radlice = 10
-pohyb_radlice = 0
-wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, radlice)
+direction = 0
+wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, Math.constrain(direction, -10, 10))
+music.setVolume(255)
+music.play(music.stringPlayable("C F C F C F C F ", 180), music.PlaybackMode.InBackground)
 basic.forever(function () {
-    levy = yValue - xValue
-    pravy = yValue + xValue
-    wuKong.setMotorSpeed(wuKong.MotorList.M1, Math.constrain(levy, -50, 50))
-    wuKong.setMotorSpeed(wuKong.MotorList.M2, Math.constrain(pravy, -50, 50))
-    if (radlice >= 0) {
-        radlice = radlice + pohyb_radlice * 1
-    } else {
-        radlice = 0
-    }
-    if (radlice >= 40) {
-        radlice = 40
-    }
+    let radlice = 0
+    wuKong.setMotorSpeed(wuKong.MotorList.M1, Math.constrain(speed, -100, 100))
+    wuKong.setMotorSpeed(wuKong.MotorList.M2, Math.constrain(direction, -10, 10))
     wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, radlice)
+    if (sonarbit.sonarbit_distance(Distance_Unit.Distance_Unit_cm, DigitalPin.P0) < 5) {
+        wuKong.setMotorSpeed(wuKong.MotorList.M1, 0)
+    }
 })
