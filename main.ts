@@ -10,16 +10,21 @@ radio.onReceivedValue(function (name, value) {
 let speed = 0
 let direction = 0
 radio.setGroup(1)
-direction = 0
-wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, Math.constrain(direction, -10, 10))
+direction = 250
+wuKong.setServoAngle(wuKong.ServoTypeList._180, wuKong.ServoList.S0, Math.constrain(direction, 225, 315))
+basic.pause(1000)
+direction = 290
+wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, Math.constrain(direction, 225, 315))
+basic.pause(1000)
+speed = 100
+direction = 270
+wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, Math.constrain(direction, 225, 315))
 music.setVolume(255)
-music.play(music.stringPlayable("C F C F C F C F ", 180), music.PlaybackMode.InBackground)
+music.play(music.stringPlayable("C - - - - - - - ", 500), music.PlaybackMode.InBackground)
 basic.forever(function () {
-    let radlice = 0
-    wuKong.setMotorSpeed(wuKong.MotorList.M1, Math.constrain(speed, -100, 100))
-    wuKong.setMotorSpeed(wuKong.MotorList.M2, Math.constrain(direction, -10, 10))
-    wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, radlice)
-    if (sonarbit.sonarbit_distance(Distance_Unit.Distance_Unit_cm, DigitalPin.P0) < 5) {
-        wuKong.setMotorSpeed(wuKong.MotorList.M1, 0)
+    wuKong.setMotorSpeed(wuKong.MotorList.M1, speed)
+    wuKong.setServoAngle(wuKong.ServoTypeList._360, wuKong.ServoList.S0, Math.constrain(direction, 230, 310))
+    if (sonarbit.sonarbit_distance(Distance_Unit.Distance_Unit_cm, DigitalPin.P0) < 5 && sonarbit.sonarbit_distance(Distance_Unit.Distance_Unit_cm, DigitalPin.P0) != 0) {
+        music.play(music.stringPlayable("C F - - - - - - ", 500), music.PlaybackMode.InBackground)
     }
 })
